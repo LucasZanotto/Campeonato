@@ -1,13 +1,12 @@
-'use strict'
+// start/migrations/xxxx_create_time_table.js
 
 const Schema = use('Schema')
 
-class TimesSchema extends Schema {
+class TimeSchema extends Schema {
   up () {
     this.create('times', (table) => {
-      table.increments('id')  // id do time
-      table.string('nome', 255).notNullable()  // nome do time
-      table.timestamps()  // timestamps para created_at e updated_at
+      table.increments('id')
+      table.string('nome', 255).notNullable()
     })
   }
 
@@ -16,4 +15,4 @@ class TimesSchema extends Schema {
   }
 }
 
-module.exports = TimesSchema
+module.exports = TimeSchema

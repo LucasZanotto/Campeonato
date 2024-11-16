@@ -1,4 +1,4 @@
-'use strict'
+// app/Models/Time.js
 
 const Model = use('Model')
 
@@ -7,10 +7,16 @@ class Time extends Model {
     return this.hasMany('App/Models/Atleta')
   }
 
-  partidas() {
-    return this.hasManyThrough('App/Models/Partida', 'App/Models/PartidaRelacionamento', 'competidor_1_id', 'id')
-      .orWhere('App/Models/PartidaRelacionamento', 'competidor_2_id', 'id')
-      .where('competidor_tipo', 'time')
+  pontuacoes() {
+    return this.hasMany('App/Models/Pontuacao', 'id', 'entidade_id')
+  }
+
+  partidasComoOponente1() {
+    return this.hasMany('App/Models/Partida', 'id', 'oponente1_id')
+  }
+
+  partidasComoOponente2() {
+    return this.hasMany('App/Models/Partida', 'id', 'oponente2_id')
   }
 }
 

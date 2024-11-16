@@ -10,8 +10,11 @@ const TorneioDetails = () => {
   const [formData, setFormData] = useState({
     competidor1_id: '',
     competidor2_id: '',
+    competidor1_pontos_id: '',
+    competidor2_pontos_id: '',
     fase: '',
     resultado: '',
+    em_andamento: '1', // Inicialmente, a partida está em andamento
   });
 
   useEffect(() => {
@@ -39,13 +42,28 @@ const TorneioDetails = () => {
   // Função para criar uma nova partida
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    console.log('Dados da requisição:', {
+        torneio_id: id,
+        competidor1_id: formData.competidor1_id,
+        competidor2_id: formData.competidor2_id,
+        competidor1_pontos_id: formData.competidor1_pontos_id,
+        competidor2_pontos_id: formData.competidor2_pontos_id,
+        fase: formData.fase,
+        resultado: formData.resultado,
+        em_andamento: formData.em_andamento, // Altere o status conforme necessário
+      });
+
+      
     axios.post(`http://localhost:3333/partidas`, {
       torneio_id: id,
       competidor1_id: formData.competidor1_id,
       competidor2_id: formData.competidor2_id,
+      competidor1_pontos_id: formData.competidor1_pontos_id,
+      competidor2_pontos_id: formData.competidor2_pontos_id,
       fase: formData.fase,
       resultado: formData.resultado,
-      em_andamento: 1, // Adicione de acordo com seu caso (por exemplo, "1" para em andamento)
+      em_andamento: formData.em_andamento, // Altere o status conforme necessário
     })
       .then(response => {
         alert('Partida criada com sucesso!');
@@ -53,8 +71,11 @@ const TorneioDetails = () => {
         setFormData({
           competidor1_id: '',
           competidor2_id: '',
+          competidor1_pontos_id: '',
+          competidor2_pontos_id: '',
           fase: '',
           resultado: '',
+          em_andamento: '1',
         });
       })
       .catch(error => {
@@ -123,6 +144,28 @@ const TorneioDetails = () => {
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label>Pontos Competidor 1</label>
+          <input
+            type="number"
+            name="competidor1_pontos_id"
+            value={formData.competidor1_pontos_id}
+            onChange={handleChange}
+            placeholder="Pontos Competidor 1"
+          />
+        </div>
+
+        <div>
+          <label>Pontos Competidor 2</label>
+          <input
+            type="number"
+            name="competidor2_pontos_id"
+            value={formData.competidor2_pontos_id}
+            onChange={handleChange}
+            placeholder="Pontos Competidor 2"
+          />
         </div>
 
         <div>

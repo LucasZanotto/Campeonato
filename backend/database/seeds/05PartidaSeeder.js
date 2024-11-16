@@ -1,25 +1,16 @@
-'use strict'
+// database/seeders/PartidaSeeder.js
 
-const Partida = use('App/Models/Partida')
-const PartidaRelacionamento = use('App/Models/PartidaRelacionamento')
 const Factory = use('Factory')
+const Partida = use('App/Models/Partida')
 
 class PartidaSeeder {
-  async run () {
-    const competicao = await Factory.model('App/Models/Competicao').create()
-
-    const partida1 = await Partida.create({
-      competicao_id: competicao.id,
-      tipo: 'PartidaPontosCorridos',
-      em_andamento: 1,
-    })
-
-    await PartidaRelacionamento.create({
-      partida_id: partida1.id,
-      time_id: 1, // Exemplo: Time 1
-      atleta_id: 2, // Exemplo: Atleta 2
-      pontos: 10,
-    })
+  async run() {
+    await Partida.createMany([
+      { torneio_id: 1, oponente1_id: 1, oponente2_id: 2, oponente1_pontos: 3, oponente2_pontos: 1, em_andamento: 0 },
+      { torneio_id: 1, oponente1_id: 3, oponente2_id: 4, oponente1_pontos: 2, oponente2_pontos: 2, em_andamento: 0 },
+      { torneio_id: 1, oponente1_id: 1, oponente2_id: 3, oponente1_pontos: 0, oponente2_pontos: 1, em_andamento: 0 },
+      { torneio_id: 1, oponente1_id: 2, oponente2_id: 4, oponente1_pontos: 1, oponente2_pontos: 1, em_andamento: 0 }
+    ])
   }
 }
 

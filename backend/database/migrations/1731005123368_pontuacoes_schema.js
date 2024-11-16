@@ -1,15 +1,15 @@
-'use strict'
+// start/migrations/xxxx_create_pontuacao_table.js
 
 const Schema = use('Schema')
 
-class PontuacoesSchema extends Schema {
+class PontuacaoSchema extends Schema {
   up () {
     this.create('pontuacoes', (table) => {
-      table.increments('id')  // id da pontuação
-      table.integer('time_id').unsigned().references('id').inTable('times').onDelete('CASCADE').notNullable()  // referência ao time
-      table.integer('partida_id').unsigned().references('id').inTable('partidas').onDelete('CASCADE').notNullable()  // referência à partida
-      table.enum('tipo', ['vitoria', 'empate', 'derrota']).notNullable()  // tipo de resultado
-      table.timestamps()  // timestamps para created_at e updated_at
+      table.increments('id')
+      table.integer('torneio_id').unsigned().references('id').inTable('torneios')
+      table.integer('entidade_id').unsigned().notNullable()
+      table.integer('pontos').defaultTo(0)
+      table.index(['torneio_id', 'entidade_id'], 'idx_pontuacao_torneio_entidade')
     })
   }
 
@@ -18,4 +18,4 @@ class PontuacoesSchema extends Schema {
   }
 }
 
-module.exports = PontuacoesSchema
+module.exports = PontuacaoSchema

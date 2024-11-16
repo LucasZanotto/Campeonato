@@ -1,14 +1,13 @@
-'use strict'
+// database/seeders/ModalidadeSeeder.js
 
+const Factory = use('Factory')
 const Modalidade = use('App/Models/Modalidade')
 
 class ModalidadeSeeder {
-  async run () {
+  async run() {
     await Modalidade.createMany([
-      { nome: 'Futebol', tipo: 'equipe' },
-      { nome: 'Tênis', tipo: 'individual' },
-      { nome: 'Vôlei', tipo: 'equipe' },
-      { nome: 'Corrida', tipo: 'individual' }
+      { nome: 'Futebol', tipo_modalidade: 'equipe' },
+      { nome: 'Tênis', tipo_modalidade: 'individual' }
     ])
   }
 }

@@ -1,15 +1,10 @@
-'use strict'
+// app/Models/Modalidade.js
 
 const Model = use('Model')
 
 class Modalidade extends Model {
-  static get table () {
-    return 'modalidades'  // Nome da tabela no banco de dados
-  }
-
-  // Definindo o relacionamento com Competicoes
-  competicoes () {
-    return this.hasMany('App/Models/Competicao')
+  torneios() {
+    return this.hasMany('App/Models/Torneio')
   }
 }
 

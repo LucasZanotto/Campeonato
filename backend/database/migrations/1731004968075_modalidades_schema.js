@@ -1,14 +1,13 @@
-'use strict'
+// start/migrations/xxxx_create_modalidade_table.js
 
 const Schema = use('Schema')
 
-class ModalidadesSchema extends Schema {
+class ModalidadeSchema extends Schema {
   up () {
     this.create('modalidades', (table) => {
-      table.increments('id')  // id da modalidade
-      table.string('nome', 255).notNullable()  // nome da modalidade
-      table.enum('tipo', ['individual', 'equipe']).notNullable()  // tipo da modalidade
-      table.timestamps()  // timestamps para created_at e updated_at
+      table.increments('id')
+      table.string('nome', 255).notNullable()
+      table.enum('tipo_modalidade', ['individual', 'equipe']).notNullable()
     })
   }
 
@@ -17,4 +16,4 @@ class ModalidadesSchema extends Schema {
   }
 }
 
-module.exports = ModalidadesSchema
+module.exports = ModalidadeSchema

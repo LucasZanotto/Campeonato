@@ -1,14 +1,14 @@
-'use strict'
+// start/migrations/xxxx_create_atleta_table.js
 
 const Schema = use('Schema')
 
-class AtletasSchema extends Schema {
+class AtletaSchema extends Schema {
   up () {
     this.create('atletas', (table) => {
-      table.increments('id')  // id do atleta
-      table.string('nome', 255).notNullable()  // nome do atleta
-      table.integer('time_id').unsigned().references('id').inTable('times').onDelete('CASCADE').notNullable()  // referência ao time
-      table.timestamps()  // timestamps para created_at e updated_at
+      table.increments('id')
+      table.string('nome', 255).notNullable()
+      table.integer('time_id').unsigned().references('id').inTable('times').onDelete('SET NULL')
+      table.index(['time_id'], 'idx_atleta_time')
     })
   }
 
@@ -17,4 +17,4 @@ class AtletasSchema extends Schema {
   }
 }
 
-module.exports = AtletasSchema
+module.exports = AtletaSchema

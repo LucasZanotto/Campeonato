@@ -1,62 +1,74 @@
--- Tabela Time
-CREATE TABLE Time (
+
+-- Tabela 'time'
+CREATE TABLE time (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL,
-    eliminado TINYINT(1) DEFAULT 0
+    nome VARCHAR(255) NOT NULL
 );
 
--- Tabela Atleta
-CREATE TABLE Atleta (
+-- Tabela 'atleta'
+CREATE TABLE atleta (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL,
-    time_id INT,
-    eliminado TINYINT(1) DEFAULT 0,
-    FOREIGN KEY (time_id) REFERENCES Time(id)
+    nome VARCHAR(255) NOT NULL,
+    time_id INT,  
+    FOREIGN KEY (time_id) REFERENCES time(id) ON DELETE SET NULL
 );
 
--- Tabela Modalidade
-CREATE TABLE Modalidade (
+-- Tabela 'modalidade'
+CREATE TABLE modalidade (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL,
-    tipo ENUM('individual', 'equipe') NOT NULL
+    nome VARCHAR(255) NOT NULL,
+    tipo_modalidade ENUM('individual', 'equipe') NOT NULL
 );
 
--- Tabela Torneio
-CREATE TABLE Torneio (
+-- Tabela 'torneio'
+CREATE TABLE torneio (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL,
-    modalidade_id INT,
-    tipo ENUM('pontos_corridos', 'classificatorios') NOT NULL,
-    competidor_id INT,
-    em_andamento ENUM('0', '1') DEFAULT '1',
-    FOREIGN KEY (modalidade_id) REFERENCES Modalidade(id)
+    nome VARCHAR(255) NOT NULL,
+    modalidade_id INT NOT NULL,  
+    tipo_torneio ENUM('pontos corridos', 'eliminatório') NOT NULL,
+    fase_atual ENUM('grupos', 'oitavas', 'quartas', 'semi', 'final') NULL,  
+    em_andamento TINYINT(1) DEFAULT 1, 
+    FOREIGN KEY (modalidade_id) REFERENCES modalidade(id)
 );
 
--- Tabela Partida
-CREATE TABLE Partida (
+-- Tabela 'partida'
+CREATE TABLE partida (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    torneio_id INT,
-    competidor1_id INT,
-    competidor2_id INT,
-    competidor1_pontos_id INT,
-    competidor2_pontos_id INT,
-    fase ENUM('Pontos_Corridos', 'Grupos', 'Oitavas', 'Quartas', 'Semi', 'Final') DEFAULT 'Pontos_Corridos',
-    resultado VARCHAR(50),
-    em_andamento ENUM('0', '1') DEFAULT '1',
-    FOREIGN KEY (torneio_id) REFERENCES Torneio(id),
-    FOREIGN KEY (competidor1_id) REFERENCES Time(id),
-    FOREIGN KEY (competidor2_id) REFERENCES Time(id),
-    FOREIGN KEY (competidor1_pontos_id) REFERENCES Time(id),
-    FOREIGN KEY (competidor2_pontos_id) REFERENCES Time(id)
+    torneio_id INT NOT NULL, 
+    oponente1_id INT NOT NULL, 
+    oponente2_id INT NOT NULL,  
+    oponente1_pontos INT DEFAULT 0,
+    oponente2_pontos INT DEFAULT 0,
+    em_andamento TINYINT(1) DEFAULT 1, 
+    FOREIGN KEY (torneio_id) REFERENCES torneio(id)
 );
 
--- Tabela Pontuação
-CREATE TABLE Pontuacao (
+-- Tabela 'pontuacao' (para registrar a pontuação acumulada em torneios de pontos corridos)
+CREATE TABLE pontuacao (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    competidor_id INT,
-    partida_id INT,
-    tipo ENUM('vitoria', 'empate', 'derrota') NOT NULL,
-    FOREIGN KEY (competidor_id) REFERENCES Time(id),
-    FOREIGN KEY (partida_id) REFERENCES Partida(id)
+    torneio_id INT NOT NULL, 
+    entidade_id INT NOT NULL,
+    pontos INT DEFAULT 0,  
+    FOREIGN KEY (torneio_id) REFERENCES torneio(id)
 );
+
+-- Tabela 'fase' (para fases eliminatórias do torneio)
+CREATE TABLE fase (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    torneio_id INT NOT NULL,
+    fase ENUM('grupos', 'oitavas', 'quartas', 'semi', 'final') NOT NULL,
+    oponente1_id INT NOT NULL, 
+    oponente2_id INT NOT NULL,
+    vencedor_id INT, 
+    em_andamento TINYINT(1) DEFAULT 1,
+    FOREIGN KEY (torneio_id) REFERENCES torneio(id)
+);
+
+CREATE INDEX idx_atleta_time ON atleta(time_id);
+
+CREATE INDEX idx_pontuacao_torneio_entidade ON pontuacao(torneio_id, entidade_id);
+
+CREATE INDEX idx_partida_torneio ON partida(torneio_id);
+
+CREATE INDEX idx_fase_torneio_fase ON fase(torneio_id, fase);
 

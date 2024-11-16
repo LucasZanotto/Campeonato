@@ -1,18 +1,22 @@
-'use strict'
+// app/Models/Atleta.js
 
 const Model = use('Model')
 
 class Atleta extends Model {
-  // Relacionamento com o time
   time() {
     return this.belongsTo('App/Models/Time')
   }
 
-  // Relacionamento para partidas através da tabela `partida_relacionamentos`
-  partidas() {
-    return this.hasManyThrough('App/Models/Partida', 'App/Models/PartidaRelacionamento', 'competidor_1_id', 'id')
-      .orWhere('App/Models/PartidaRelacionamento', 'competidor_2_id', 'id')
-      .where('competidor_tipo', 'atleta')
+  pontuacoes() {
+    return this.hasMany('App/Models/Pontuacao', 'id', 'entidade_id')
+  }
+
+  partidasComoOponente1() {
+    return this.hasMany('App/Models/Partida', 'id', 'oponente1_id')
+  }
+
+  partidasComoOponente2() {
+    return this.hasMany('App/Models/Partida', 'id', 'oponente2_id')
   }
 }
 
