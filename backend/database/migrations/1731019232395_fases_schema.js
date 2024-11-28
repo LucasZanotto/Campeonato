@@ -12,6 +12,7 @@ class FaseSchema extends Schema {
       table.integer('oponente2_id').unsigned().notNullable()
       table.integer('vencedor_id').unsigned().nullable()
       table.boolean('em_andamento').defaultTo(true)
+      table.timestamps()
       table.index(['torneio_id', 'fase'], 'idx_fase_torneio_fase')  
     })
   }

@@ -20,3 +20,19 @@ Route.post('/pontuacoes', 'PontuacaoController.store')
 
 Route.get('/fases', 'FaseController.index')
 Route.post('/fases', 'FaseController.store')
+
+Route.get('torneios/:torneio_id/pontuacoes/atletas', 'PontuacaoController.pontosCorridosAtleta');
+Route.get('torneios/:torneio_id/pontuacoes/times', 'PontuacaoController.pontosCorridosTime');
+
+Route.get('/torneios/:torneio_id/:fase', 'TorneioController.faseDoTorneio');
+Route.post('torneios/tipo', 'TorneioController.getTorneiosPorTipo');
+Route.get('torneios/:id', 'TorneioController.show');
+
+Route.get('atleta/:torneio_id/partidas', 'PartidaController.indexAtleta');
+Route.get('time/:torneio_id/partidas', 'PartidaController.indexTime');
+
+Route.get('modalidades/:torneio_id', 'PartidaController.indexDaModalidade');
+Route.get('pontuacoes/:id/pontuacao', 'PontuacaoController.pontuacao');
+
+Route.put('/partidas/:id/pontos', 'PartidaController.atualizarPontos');
+Route.put('/partidas/:id/encerrar', 'PartidaController.encerrarPartida');

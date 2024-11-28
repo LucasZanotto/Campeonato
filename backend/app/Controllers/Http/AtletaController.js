@@ -1,6 +1,7 @@
 // app/Controllers/Http/AtletaController.js
 
 const Atleta = use('App/Models/Atleta')
+const Database = use('Database');
 
 class AtletaController {
   async index({ response }) {

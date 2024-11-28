@@ -12,6 +12,7 @@ class PartidaSchema extends Schema {
       table.integer('oponente1_pontos').defaultTo(0)
       table.integer('oponente2_pontos').defaultTo(0)
       table.boolean('em_andamento').defaultTo(true)
+      table.timestamps()
       table.index(['torneio_id'], 'idx_partida_torneio')
     })
   }

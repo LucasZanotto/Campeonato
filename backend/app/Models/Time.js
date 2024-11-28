@@ -3,6 +3,10 @@
 const Model = use('Model')
 
 class Time extends Model {
+  static get table () {
+    return 'times'
+  }
+  
   atletas() {
     return this.hasMany('App/Models/Atleta')
   }

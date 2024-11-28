@@ -8,6 +8,7 @@ class ModalidadeSchema extends Schema {
       table.increments('id')
       table.string('nome', 255).notNullable()
       table.enum('tipo_modalidade', ['individual', 'equipe']).notNullable()
+      table.timestamps()
     })
   }
 

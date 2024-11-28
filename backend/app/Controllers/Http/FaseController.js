@@ -1,6 +1,7 @@
 // app/Controllers/Http/FaseController.js
 
 const Fase = use('App/Models/Fase')
+const Database = use('Database');
 
 class FaseController {
   async index({ response }) {

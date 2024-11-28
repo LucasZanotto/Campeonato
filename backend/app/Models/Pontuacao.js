@@ -1,29 +1,19 @@
-// app/Models/Fase.js
-
 const Model = use('Model')
 
-class Fase extends Model {
+class Pontuacao extends Model {
+  static get table() {
+    return 'pontuacoes'
+  }
+  
   torneio() {
     return this.belongsTo('App/Models/Torneio')
   }
 
-  oponente1() {
-    return this.belongsTo('App/Models/Time', 'oponente1_id', 'id').union(
-      this.belongsTo('App/Models/Atleta', 'oponente1_id', 'id')
-    )
-  }
-
-  oponente2() {
-    return this.belongsTo('App/Models/Time', 'oponente2_id', 'id').union(
-      this.belongsTo('App/Models/Atleta', 'oponente2_id', 'id')
-    )
-  }
-
-  vencedor() {
-    return this.belongsTo('App/Models/Time', 'vencedor_id', 'id').union(
-      this.belongsTo('App/Models/Atleta', 'vencedor_id', 'id')
+  entidade() {
+    return this.belongsTo('App/Models/Time', 'entidade_id', 'id').union(
+      this.belongsTo('App/Models/Atleta', 'entidade_id', 'id')
     )
   }
 }
 
-module.exports = Fase
+module.exports = Pontuacao

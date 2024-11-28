@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const CreateModalidade = () => {
   const [nome, setNome] = useState('');
   const [tipo, setTipo] = useState('equipe');
+  const [modalidades, setModalidades] = useState([]); // Para armazenar as modalidades
+
+  // Buscar todas as modalidades
+  useEffect(() => {
+    axios.get('http://localhost:3333/modalidades')  // Chama a API para pegar todas as modalidades
+      .then(response => {
+        setModalidades(response.data);  // Preenche o estado com os dados das modalidades
+      })
+      .catch(error => {
+        console.error('Erro ao buscar modalidades:', error);
+      });
+  }, []);
 
   // Enviar os dados para o backend para criar a modalidade
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(tipo)
 
     const modalidadeData = {
       nome,
@@ -18,8 +31,22 @@ const CreateModalidade = () => {
       const response = await axios.post('http://localhost:3333/modalidades', modalidadeData);
       alert('Modalidade criada com sucesso!');
       console.log(response.data);
+
+      // Recarregar a lista de modalidades após a criação
+      axios.get('http://localhost:3333/modalidades')
+        .then(response => {
+          setModalidades(response.data);  // Atualiza a lista de modalidades
+        })
+        .catch(error => {
+          console.error('Erro ao buscar modalidades:', error);
+        });
+
+      // Limpa os campos após o envio
+      setNome('');
+      setTipo('equipe');
     } catch (error) {
       console.error('Erro ao criar modalidade', error);
+      alert('Erro ao criar modalidade');
     }
   };
 
@@ -55,6 +82,26 @@ const CreateModalidade = () => {
           <button type="submit">Criar Modalidade</button>
         </div>
       </form>
+
+      <h2>Modalidades Criadas</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {modalidades.map(modalidade => (
+            <tr key={modalidade.id}>
+              <td>{modalidade.id}</td>
+              <td>{modalidade.nome}</td>
+              <td>{modalidade.tipo_modalidade}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

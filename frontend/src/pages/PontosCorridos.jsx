@@ -2,17 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Torneios = () => {
-  const navigate = useNavigate();
+const PontosCorridos = () => {
+  const navigate = useNavigate();  // Agora você pode usar o hook
 
   const [nome, setNome] = useState('');
   const [modalidadeId, setModalidadeId] = useState('');
-  const [tipoTorneio, setTipoTorneio] = useState('todos'); // Tipo selecionado para exibição
   const [modalidades, setModalidades] = useState([]);
   const [torneios, setTorneios] = useState([]);
-  const [torneiosFiltrados, setTorneiosFiltrados] = useState([]); // Para exibição dinâmica
 
-  // Buscar modalidades para o formulário
+  // Buscar as modalidades para o formulário
   useEffect(() => {
     axios.get('http://localhost:3333/modalidades')
       .then(response => {
@@ -23,33 +21,23 @@ const Torneios = () => {
       });
   }, []);
 
-  // Buscar todos os torneios
+  // Buscar os torneios de pontos corridos (com o nome da modalidade incluído)
   useEffect(() => {
-    axios.get('http://localhost:3333/torneios')
+    axios.post('http://localhost:3333/torneios/tipo', { tipo: 'pontos corridos' })
       .then(response => {
         setTorneios(response.data);
-        setTorneiosFiltrados(response.data); // Exibe todos inicialmente
       })
       .catch(error => {
-        console.error('Erro ao buscar torneios:', error);
+        console.error('Erro ao buscar torneios de pontos corridos:', error);
       });
   }, []);
-
-  // Atualizar exibição com base no tipo selecionado
-  useEffect(() => {
-    if (tipoTorneio === 'todos') {
-      setTorneiosFiltrados(torneios); // Mostra todos os torneios
-    } else {
-      setTorneiosFiltrados(torneios.filter(torneio => torneio.tipo_torneio === tipoTorneio));
-    }
-  }, [tipoTorneio, torneios]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       nome,
       modalidade_id: modalidadeId,
-      tipo_torneio: tipoTorneio, // Tipo de torneio selecionado no formulário
+      tipo_torneio: 'pontos corridos',
     };
 
     try {
@@ -57,12 +45,10 @@ const Torneios = () => {
       alert('Torneio criado com sucesso!');
       setNome('');
       setModalidadeId('');
-      setTipoTorneio('todos'); // Reseta para mostrar todos
 
       // Atualiza a lista de torneios
-      const response = await axios.get('http://localhost:3333/torneios');
+      const response = await axios.post('http://localhost:3333/torneios/tipo', { tipo: 'pontos corridos' });
       setTorneios(response.data);
-      setTorneiosFiltrados(response.data);
     } catch (error) {
       console.error('Erro ao criar torneio:', error);
       alert('Erro ao criar torneio');
@@ -71,7 +57,9 @@ const Torneios = () => {
 
   return (
     <div>
-      <h1>Criar Torneio</h1>
+      <h1>Pontos Corridos</h1>
+
+      <h2>Criar Torneio</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="nome">Nome do Torneio:</label>
@@ -99,56 +87,34 @@ const Torneios = () => {
             ))}
           </select>
         </div>
-        <div>
-          <label htmlFor="tipoTorneio">Tipo de Torneio:</label>
-          <select
-            id="tipoTorneio"
-            value={tipoTorneio}
-            onChange={(e) => setTipoTorneio(e.target.value)}
-            required
-          >
-            <option value="pontos corridos">Pontos Corridos</option>
-            <option value="eliminatório">Eliminatório</option>
-            <option value="todos">Todos</option>
-          </select>
-        </div>
         <button type="submit">Criar Torneio</button>
       </form>
 
-      <h2>Torneios</h2>
+      <h2>Torneios de Pontos Corridos</h2>
       <table border="1" style={{ marginTop: '20px', width: '100%' }}>
         <thead>
           <tr>
             <th>ID</th>
             <th>Nome</th>
             <th>Modalidade</th>
-            <th>Tipo</th>
             <th>Em Andamento</th>
             <th>Criado em</th>
           </tr>
         </thead>
         <tbody>
-  {torneiosFiltrados.map((torneio) => {
-    // Encontra a modalidade correspondente ao modalidade_id do torneio
-    const modalidade = modalidades.find((mod) => mod.id === torneio.modalidade_id);
-
-    return (
-      <tr key={torneio.id}>
-        <td>{torneio.id}</td>
-        <td onClick={() => navigate(`/torneios/${torneio.tipo_torneio.replace(' ', '-')}/${torneio.id}`)}>
-          {torneio.nome}
-        </td>
-        <td>{modalidade ? modalidade.nome : 'N/A'}</td>
-        <td>{torneio.tipo_torneio}</td>
-        <td>{torneio.em_andamento ? 'Sim' : 'Não'}</td>
-        <td>{torneio.created_at || 'N/A'}</td>
-      </tr>
-    );
-  })}
-</tbody>
+          {torneios.map((torneio) => (
+            <tr key={torneio.id}>
+              <td>{torneio.id}</td>
+              <td onClick={() => navigate(`/torneios/pontos-corridos/${torneio.id}`)}>{torneio.nome}</td>
+              <td>{torneio.modalidade?.nome || 'N/A'}</td>
+              <td>{torneio.em_andamento ? 'Sim' : 'Não'}</td>
+              <td>{torneio.created_at || 'N/A'}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );
 };
 
-export default Torneios;
+export default PontosCorridos;

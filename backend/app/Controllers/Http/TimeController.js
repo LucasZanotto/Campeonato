@@ -1,6 +1,7 @@
 // app/Controllers/Http/TimeController.js
 
 const Time = use('App/Models/Time')
+const Database = use('Database');
 
 class TimeController {
   async index({ response }) {
@@ -13,6 +14,8 @@ class TimeController {
     const time = await Time.create(data)
     return response.status(201).json(time)
   }
+
+
 }
 
 module.exports = TimeController

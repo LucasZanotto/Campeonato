@@ -9,6 +9,7 @@ class PontuacaoSchema extends Schema {
       table.integer('torneio_id').unsigned().references('id').inTable('torneios')
       table.integer('entidade_id').unsigned().notNullable()
       table.integer('pontos').defaultTo(0)
+      table.timestamps()
       table.index(['torneio_id', 'entidade_id'], 'idx_pontuacao_torneio_entidade')
     })
   }

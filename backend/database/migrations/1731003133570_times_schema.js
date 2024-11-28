@@ -7,6 +7,7 @@ class TimeSchema extends Schema {
     this.create('times', (table) => {
       table.increments('id')
       table.string('nome', 255).notNullable()
+      table.timestamps()
     })
   }
 

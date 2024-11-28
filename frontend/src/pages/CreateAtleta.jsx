@@ -5,6 +5,7 @@ const CreateAtleta = () => {
   const [nome, setNome] = useState('');
   const [timeId, setTimeId] = useState('');
   const [times, setTimes] = useState([]); // Para armazenar os times
+  const [atletas, setAtletas] = useState([]); // Para armazenar os atletas
 
   // Buscar todos os times
   useEffect(() => {
@@ -14,6 +15,15 @@ const CreateAtleta = () => {
       })
       .catch(error => {
         console.error('Erro ao buscar times:', error);
+      });
+
+    // Buscar todos os atletas ao montar o componente
+    axios.get('http://localhost:3333/atletas')
+      .then(response => {
+        setAtletas(response.data);  // Preenche o estado com os dados dos atletas
+      })
+      .catch(error => {
+        console.error('Erro ao buscar atletas:', error);
       });
   }, []);
 
@@ -30,11 +40,27 @@ const CreateAtleta = () => {
     axios.post('http://localhost:3333/atletas', data)
       .then(response => {
         alert('Atleta criado com sucesso!');
+        setNome('');  // Limpa o campo nome após a criação
+        setTimeId('');  // Limpa o campo time selecionado
+        // Recarregar a lista de atletas após a criação
+        axios.get('http://localhost:3333/atletas')
+          .then(response => {
+            setAtletas(response.data);  // Atualiza a lista de atletas
+          })
+          .catch(error => {
+            console.error('Erro ao buscar atletas:', error);
+          });
       })
       .catch(error => {
         alert('Erro ao criar atleta');
         console.error(error);
       });
+  };
+
+  // Função para buscar o nome do time pelo id
+  const getTimeNameById = (id) => {
+    const time = times.find((time) => time.id === id);
+    return time ? time.nome : 'Sem time';
   };
 
   return (
@@ -61,6 +87,26 @@ const CreateAtleta = () => {
         </div>
         <button type="submit">Criar Atleta</button>
       </form>
+
+      <h2>Atletas Criados</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {atletas.map(atleta => (
+            <tr key={atleta.id}>
+              <td>{atleta.id}</td>
+              <td>{atleta.nome}</td>
+              <td>{getTimeNameById(atleta.time_id)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

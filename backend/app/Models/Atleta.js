@@ -3,6 +3,10 @@
 const Model = use('Model')
 
 class Atleta extends Model {
+  static get table () {
+    return 'atletas'
+  }
+  
   time() {
     return this.belongsTo('App/Models/Time')
   }

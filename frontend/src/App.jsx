@@ -3,11 +3,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import CreateTime from './pages/CreateTime';
 import CreateAtleta from './pages/CreateAtleta';
-import CreateTorneio from './pages/CreateTorneio';
 import Torneios from './pages/Torneios';
-import TorneioDetails from './pages/TorneioDetails';
 import CreateModalidade from './pages/CreateModalidade';
-import TorneioPartidas from './pages/TorneioPartidas';
+import PontosCorridos from './pages/PontosCorridos';
+import Eliminatorio from './pages/Eliminatorio';
+import TorneioDetalhes from './pages/TorneioDetalhes';
+import Pontuacao from './pages/Pontuacao';
 
 const App = () => {
   return (
@@ -17,10 +18,11 @@ const App = () => {
         <Route path="/create-time" element={<CreateTime />} />
         <Route path="/create-atleta" element={<CreateAtleta />} />
         <Route path="/create-modalidade" element={<CreateModalidade />} />
-        <Route path="/create-torneio" element={<CreateTorneio />} />
         <Route path="/torneios" element={<Torneios />} />
-        <Route path="/torneio/:id" element={<TorneioDetails />} />
-        <Route path="/torneios/:id/partidas" element={<TorneioPartidas />} />
+        <Route path="/torneios/pontos-corridos/:id" element={<TorneioDetalhes />} />
+        <Route path="/torneios/eliminatório/:id" element={<Eliminatorio />} />
+        <Route path="/torneios/pontos-corridos" element={<PontosCorridos />} />
+        <Route path="/torneios/:id/pontuacao" element={<Pontuacao />} />
       </Routes>
     </Router>
   );

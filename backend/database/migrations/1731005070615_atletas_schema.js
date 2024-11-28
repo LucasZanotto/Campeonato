@@ -8,6 +8,7 @@ class AtletaSchema extends Schema {
       table.increments('id')
       table.string('nome', 255).notNullable()
       table.integer('time_id').unsigned().references('id').inTable('times').onDelete('SET NULL')
+      table.timestamps()
       table.index(['time_id'], 'idx_atleta_time')
     })
   }
