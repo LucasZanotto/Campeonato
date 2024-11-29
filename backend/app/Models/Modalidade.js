@@ -1,11 +1,9 @@
-// app/Models/Modalidade.js
-
-const Model = use('Model')
+const Model = use("Model");
 
 class Modalidade extends Model {
   torneios() {
-    return this.hasMany('App/Models/Torneio')
+    return this.hasMany("App/Models/Torneio");
   }
 }
 
-module.exports = Modalidade
+module.exports = Modalidade;

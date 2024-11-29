@@ -1,23 +1,21 @@
-// app/Models/Torneio.js
-
-const Model = use('Model')
+const Model = use("Model");
 
 class Torneio extends Model {
   modalidade() {
-    return this.belongsTo('App/Models/Modalidade')
+    return this.belongsTo("App/Models/Modalidade");
   }
 
   partidas() {
-    return this.hasMany('App/Models/Partida')
+    return this.hasMany("App/Models/Partida");
   }
 
   pontuacoes() {
-    return this.hasMany('App/Models/Pontuacao')
+    return this.hasMany("App/Models/Pontuacao");
   }
 
   fases() {
-    return this.hasMany('App/Models/Fase')
+    return this.hasMany("App/Models/Fase");
   }
 }
 
-module.exports = Torneio
+module.exports = Torneio;

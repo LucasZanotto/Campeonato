@@ -3,14 +3,13 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const PontosCorridos = () => {
-  const navigate = useNavigate();  // Agora você pode usar o hook
+  const navigate = useNavigate();
 
   const [nome, setNome] = useState('');
   const [modalidadeId, setModalidadeId] = useState('');
   const [modalidades, setModalidades] = useState([]);
   const [torneios, setTorneios] = useState([]);
 
-  // Buscar as modalidades para o formulário
   useEffect(() => {
     axios.get('http://localhost:3333/modalidades')
       .then(response => {
@@ -21,7 +20,6 @@ const PontosCorridos = () => {
       });
   }, []);
 
-  // Buscar os torneios de pontos corridos (com o nome da modalidade incluído)
   useEffect(() => {
     axios.post('http://localhost:3333/torneios/tipo', { tipo: 'pontos corridos' })
       .then(response => {
@@ -46,7 +44,6 @@ const PontosCorridos = () => {
       setNome('');
       setModalidadeId('');
 
-      // Atualiza a lista de torneios
       const response = await axios.post('http://localhost:3333/torneios/tipo', { tipo: 'pontos corridos' });
       setTorneios(response.data);
     } catch (error) {
@@ -57,6 +54,7 @@ const PontosCorridos = () => {
 
   return (
     <div>
+      <button><a href="/torneios">Voltar</a></button>
       <h1>Pontos Corridos</h1>
 
       <h2>Criar Torneio</h2>

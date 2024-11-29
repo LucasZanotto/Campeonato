@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams, Link } from "react-router-dom";
 
 const Pontuacao = () => {
   const { id } = useParams();
@@ -10,10 +10,12 @@ const Pontuacao = () => {
   useEffect(() => {
     const fetchPontuacao = async () => {
       try {
-        const response = await axios.get(`http://localhost:3333/pontuacoes/${id}/pontuacao`);
+        const response = await axios.get(
+          `http://localhost:3333/pontuacoes/${id}/pontuacao`
+        );
         setPontuacoes(response.data);
       } catch (error) {
-        console.error('Erro ao buscar pontuação:', error);
+        console.error("Erro ao buscar pontuação:", error);
       } finally {
         setLoading(false);
       }
@@ -23,14 +25,21 @@ const Pontuacao = () => {
   }, [id]);
 
   if (loading) {
-    return <div>Carregando pontuação...</div>;
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <h2>Carregando pontuação...</h2>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1>Pontuação do Torneio</h1>
-      <table border="1" style={{ marginTop: '20px', width: '100%' }}>
-        <thead>
+    <div className="container d-flex flex-column justify-content-center align-items-center vh-100">
+      <Link to="/torneios" className="btn btn-secondary mb-4">
+        Voltar
+      </Link>
+      <h1 className="text-center mb-4">Pontuação do Torneio</h1>
+      <table className="table table-bordered table-striped w-75 text-center">
+        <thead className="thead-dark">
           <tr>
             <th>ID</th>
             <th>Nome</th>

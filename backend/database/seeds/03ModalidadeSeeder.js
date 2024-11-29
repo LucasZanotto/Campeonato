@@ -1,5 +1,3 @@
-// database/seeders/ModalidadeSeeder.js
-
 const Factory = use('Factory')
 const Modalidade = use('App/Models/Modalidade')
 

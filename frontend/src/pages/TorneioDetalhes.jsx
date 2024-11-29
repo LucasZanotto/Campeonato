@@ -1,35 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams, Link } from "react-router-dom";
 
 const TorneioDetalhes = () => {
   const { id } = useParams();
   const [torneio, setTorneio] = useState(null);
   const [modalidade, setModalidade] = useState(null);
-  const [entidades, setEntidades] = useState([]); // Armazena os times ou atletas
-  const [oponente1Id, setOponente1Id] = useState('');
-  const [oponente2Id, setOponente2Id] = useState('');
+  const [entidades, setEntidades] = useState([]);
+  const [oponente1Id, setOponente1Id] = useState("");
+  const [oponente2Id, setOponente2Id] = useState("");
   const [partidas, setPartidas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editandoPontos, setEditandoPontos] = useState(null); // ID da partida sendo editada
+  const [editandoPontos, setEditandoPontos] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const torneioResponse = await axios.get(`http://localhost:3333/torneios/${id}`);
+        const torneioResponse = await axios.get(
+          `http://localhost:3333/torneios/${id}`
+        );
         setTorneio(torneioResponse.data);
 
-        const modalidadesResponse = await axios.get('http://localhost:3333/modalidades');
+        const modalidadesResponse = await axios.get(
+          "http://localhost:3333/modalidades"
+        );
         const modalidadeSelecionada = modalidadesResponse.data.find(
           (mod) => mod.id === torneioResponse.data.modalidade_id
         );
         setModalidade(modalidadeSelecionada);
 
         let entidadesResponse;
-        if (modalidadeSelecionada.tipo_modalidade === 'equipe') {
-          entidadesResponse = await axios.get('http://localhost:3333/times');
-        } else if (modalidadeSelecionada.tipo_modalidade === 'individual') {
-          entidadesResponse = await axios.get('http://localhost:3333/atletas');
+        if (modalidadeSelecionada.tipo_modalidade === "equipe") {
+          entidadesResponse = await axios.get("http://localhost:3333/times");
+        } else if (modalidadeSelecionada.tipo_modalidade === "individual") {
+          entidadesResponse = await axios.get("http://localhost:3333/atletas");
         }
 
         if (entidadesResponse) {
@@ -37,12 +41,12 @@ const TorneioDetalhes = () => {
         }
 
         const partidasResponse =
-          modalidadeSelecionada.tipo_modalidade === 'equipe'
+          modalidadeSelecionada.tipo_modalidade === "equipe"
             ? await axios.get(`http://localhost:3333/time/${id}/partidas`)
             : await axios.get(`http://localhost:3333/atleta/${id}/partidas`);
         setPartidas(partidasResponse.data);
       } catch (error) {
-        console.error('Erro ao carregar dados:', error);
+        console.error("Erro ao carregar dados:", error);
       } finally {
         setLoading(false);
       }
@@ -61,59 +65,62 @@ const TorneioDetalhes = () => {
     };
 
     try {
-      await axios.post('http://localhost:3333/partidas', partida);
-      alert('Partida criada com sucesso!');
-      setOponente1Id('');
-      setOponente2Id('');
-      // Atualizar a tabela
+      await axios.post("http://localhost:3333/partidas", partida);
+      alert("Partida criada com sucesso!");
+      setOponente1Id("");
+      setOponente2Id("");
       const atualizadas =
-        modalidade.tipo_modalidade === 'equipe'
+        modalidade.tipo_modalidade === "equipe"
           ? await axios.get(`http://localhost:3333/time/${id}/partidas`)
           : await axios.get(`http://localhost:3333/atleta/${id}/partidas`);
       setPartidas(atualizadas.data);
     } catch (error) {
-      console.error('Erro ao criar a partida:', error);
-      alert('Erro ao criar a partida.');
+      console.error("Erro ao criar a partida:", error);
+      alert("Erro ao criar a partida.");
     }
   };
 
-  const handleSavePontos = async (partidaId, oponente1Pontos, oponente2Pontos) => {
+  const handleSavePontos = async (
+    partidaId,
+    oponente1Pontos,
+    oponente2Pontos
+  ) => {
     try {
       await axios.put(`http://localhost:3333/partidas/${partidaId}/pontos`, {
         oponente1_pontos: oponente1Pontos,
         oponente2_pontos: oponente2Pontos,
       });
-      alert('Pontos atualizados com sucesso!');
-      setEditandoPontos(null); // Finalizar edição
-      // Atualizar a tabela
+      alert("Pontos atualizados com sucesso!");
+      setEditandoPontos(null);
       const atualizadas =
-        modalidade.tipo_modalidade === 'equipe'
+        modalidade.tipo_modalidade === "equipe"
           ? await axios.get(`http://localhost:3333/time/${id}/partidas`)
           : await axios.get(`http://localhost:3333/atleta/${id}/partidas`);
       setPartidas(atualizadas.data);
     } catch (error) {
-      console.error('Erro ao atualizar os pontos:', error);
-      alert('Erro ao atualizar os pontos.');
+      console.error("Erro ao atualizar os pontos:", error);
+      alert("Erro ao atualizar os pontos.");
     }
   };
 
   const handleEncerrarPartida = async (partidaId) => {
     try {
-      const confirmacao = window.confirm('Tem certeza que deseja encerrar esta partida?');
+      const confirmacao = window.confirm(
+        "Tem certeza que deseja encerrar esta partida?"
+      );
       if (!confirmacao) return;
 
-      const response = await axios.put(`http://localhost:3333/partidas/${partidaId}/encerrar`);
-      alert('Partida encerrada com sucesso!');
+      await axios.put(`http://localhost:3333/partidas/${partidaId}/encerrar`);
+      alert("Partida encerrada com sucesso!");
 
-      // Atualizar a lista de partidas
       const atualizadas =
-        modalidade.tipo_modalidade === 'equipe'
+        modalidade.tipo_modalidade === "equipe"
           ? await axios.get(`http://localhost:3333/time/${id}/partidas`)
           : await axios.get(`http://localhost:3333/atleta/${id}/partidas`);
       setPartidas(atualizadas.data);
     } catch (error) {
-      console.error('Erro ao encerrar a partida:', error.response || error);
-      alert('Erro ao encerrar a partida: ' + (error.response?.data?.message || 'Erro desconhecido'));
+      console.error("Erro ao encerrar a partida:", error);
+      alert("Erro ao encerrar a partida.");
     }
   };
 
@@ -122,21 +129,25 @@ const TorneioDetalhes = () => {
   }
 
   return (
-    <div>
+    <div className="container my-5">
+      <Link to="/torneios" className="btn btn-secondary mb-3">
+        Voltar
+      </Link>
       {torneio ? <h1>{torneio.nome}</h1> : <p>Carregando torneio...</p>}
 
-      <Link to={`/torneios/${id}/pontuacao`}>
-        <button style={{ marginBottom: '20px' }}>Ver Pontuação</button>
+      <Link to={`/torneios/${id}/pontuacao`} className="btn btn-info my-3">
+        Ver Pontuação
       </Link>
 
-      <form onSubmit={handleSubmit} style={{ marginBottom: '30px' }}>
+      <form onSubmit={handleSubmit} className="mb-4">
         <h2>Criar Partida</h2>
-        <div>
+        <div className="form-group">
           <label htmlFor="oponente1">Oponente 1:</label>
           <select
             id="oponente1"
             value={oponente1Id}
             onChange={(e) => setOponente1Id(e.target.value)}
+            className="form-control"
             required
           >
             <option value="">Selecione o Oponente 1</option>
@@ -147,12 +158,13 @@ const TorneioDetalhes = () => {
             ))}
           </select>
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="oponente2">Oponente 2:</label>
           <select
             id="oponente2"
             value={oponente2Id}
             onChange={(e) => setOponente2Id(e.target.value)}
+            className="form-control"
             required
           >
             <option value="">Selecione o Oponente 2</option>
@@ -163,11 +175,13 @@ const TorneioDetalhes = () => {
             ))}
           </select>
         </div>
-        <button type="submit">Criar Partida</button>
+        <button type="submit" className="btn btn-primary mt-2">
+          Criar Partida
+        </button>
       </form>
 
       <h2>Partidas do Torneio</h2>
-      <table border="1" style={{ marginTop: '20px', width: '100%' }}>
+      <table className="table table-striped mt-3">
         <thead>
           <tr>
             <th>ID</th>
@@ -190,7 +204,10 @@ const TorneioDetalhes = () => {
                   <input
                     type="number"
                     defaultValue={partida.oponente1_pontos}
-                    onChange={(e) => (partida.oponente1_pontos = e.target.value)}
+                    onChange={(e) =>
+                      (partida.oponente1_pontos = e.target.value)
+                    }
+                    className="form-control"
                   />
                 ) : (
                   partida.oponente1_pontos
@@ -201,13 +218,16 @@ const TorneioDetalhes = () => {
                   <input
                     type="number"
                     defaultValue={partida.oponente2_pontos}
-                    onChange={(e) => (partida.oponente2_pontos = e.target.value)}
+                    onChange={(e) =>
+                      (partida.oponente2_pontos = e.target.value)
+                    }
+                    className="form-control"
                   />
                 ) : (
                   partida.oponente2_pontos
                 )}
               </td>
-              <td>{partida.em_andamento ? 'Sim' : 'Não'}</td>
+              <td>{partida.em_andamento ? "Sim" : "Não"}</td>
               <td>
                 {editandoPontos === partida.id ? (
                   <button
@@ -218,18 +238,27 @@ const TorneioDetalhes = () => {
                         partida.oponente2_pontos
                       )
                     }
+                    className="btn btn-success"
                   >
                     Salvar
                   </button>
                 ) : (
                   <>
-                    <button onClick={() => setEditandoPontos(partida.id)}>Editar</button>
-                    <button onClick={() => handleEncerrarPartida(partida.id)}>Encerrar</button>
+                    <button
+                      onClick={() => setEditandoPontos(partida.id)}
+                      className="btn btn-warning"
+                    >
+                      Editar Pontos
+                    </button>
+                    <button
+                      onClick={() => handleEncerrarPartida(partida.id)}
+                      className="btn btn-danger ml-2"
+                    >
+                      Encerrar
+                    </button>
                   </>
                 )}
               </td>
-
-
             </tr>
           ))}
         </tbody>

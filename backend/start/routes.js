@@ -36,3 +36,9 @@ Route.get('pontuacoes/:id/pontuacao', 'PontuacaoController.pontuacao');
 
 Route.put('/partidas/:id/pontos', 'PartidaController.atualizarPontos');
 Route.put('/partidas/:id/encerrar', 'PartidaController.encerrarPartida');
+
+
+Route.post('/torneios/:torneio_id/grupos', 'GrupoController.adicionarParticipantes');
+Route.get('/torneios/:torneio_id/grupos/pegar', 'GrupoController.listarPorTorneio');
+
+Route.get('/times/:time_id/historico', 'PartidaController.historicoPorTime');

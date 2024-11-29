@@ -1,5 +1,3 @@
-// database/seeders/AtletaSeeder.js
-
 const Factory = use('Factory')
 const Atleta = use('App/Models/Atleta')
 
@@ -11,7 +9,9 @@ class AtletaSeeder {
       { nome: 'Atleta 3', time_id: 2 },
       { nome: 'Atleta 4', time_id: 2 },
       { nome: 'Atleta 5', time_id: null },
-      { nome: 'Atleta 6', time_id: null }
+      { nome: 'Atleta 6', time_id: null },
+      { nome: 'Atleta 7', time_id: null },
+      { nome: 'Atleta 8', time_id: null }
     ])
   }
 }
